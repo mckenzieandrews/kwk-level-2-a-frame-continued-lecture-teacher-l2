@@ -1,69 +1,81 @@
-# A-Frame
+# A-Frame Continued: Entities and Components
 
 **NOTE:** This lecture makes use of example code located [here][example]. Make sure you have it open and ready to display, and that you are familiar with the code.  
 
 ## Objectives
 
-This lecture seeks to introduce A-Frame and expose students to basic usage of it. In the context of introducing A-Frame, we will also introduce students to the more general framework concept of Entity-Component-System.
+In this lecture we will explore the first two elements of the ECS paradigm further: Entities and Components. Specifically, we will address them within the context of A-Frame.
 
 
 ## SWBATS
 
-+ GENERAL - Provide a general description for Entity-Component-System
-+ AFRAME - Identify the usage of the framework
-+ AFRAME - Create a basic scene
-+ AFRAME - Use the inspector
++ GENERAL: Identify and define entities' and components' roles within the ECS paradigm
++ AFRAME: Identify and place entities and components within the framework
++ AFRAME: Create and use entities and components within A-Frame
 
-**NOTE:** Students will likely have questions on Entity-Component-Systems. We want to provide a high level overview without getting too in the weeds. It is important to take a moment to familiarize yourself with ECS (we recommend the wiki linked below for additional reading). This will help you field those questions with confidence and determine the level of complexity/best way to provide an explanation. Try to ensure student's are not convoluting A-Frame and ECS directly (A-Frame is a framework/library of existing code that leverages ECS _concepts_ in architectural/pattern decisions)
+## Introduction
 
-**NOTE:** A-Frame is a significantly sized, and powerful project (not to mention an absolute blast!). The complexity of the code powering A-Frame projects behind the scenes is significant compared to what students have been doing so far. We want to keep them focused on high level interaction and having fun with the framework, instead of getting overwhelmed in the details. We will take a "show and tell" approach in the A-Frame lectures.
+We are going to build a simple world step by step, adding complexity as we go. While we provide code examples, you should feel free (and are encouraged to) experiment as we go. Consider using different primitives (i.e. an `<a-octahedron>` instead of an `<a-sphere>`) and/or components as we progress. After all, this is your world!
 
+We will be building off of the provided `index.html` file, and start writing our own functionality in with `index.js`. You will see that both the `a-frame` library, as well as our `index.js` script, have already been included in the `html`.
 
-## Introducing A-Frame
+## Making Entities, Adding Components...
 
-[A-Frame][a-frame-intro] is a JavaScript framework that allows you to build 3D virtual reality applications that run in the browser. A-Frame leverages an [**Entity-Component-System**][ecs] (ECS) framework. This framework helps us, as programmers, structure our projects and user experiences. The components of the ECS framework are intuitive:
-  - **Entity**: a general purpose object (i.e. a shape on the screen)
-  - **Component**: an aspect of an object (i.e. color, position, velocity)
-  - **System**: the overarching environment that encompasses entities (i.e. the scene itself, which manages the rendering and animations of entities)
+Let's add a sphere to our scene. Go ahead and create an `<a-sphere>` providing it a starting position of `position="0 0 0"`, and a radius of "2". Give it a color attribute as either a string, hex value, or rgb value (i.e. `#33F`, or `blue`).
 
-A-Frame is a large library with months of material to master. Consequentially, we don't have time to explore every aspect of it. As a crash course, we will introduce you to some of the basic building blocks with the intention of getting you creating your own custom content quickly.  
+Let's also uncomment out the `camera` entity we have already provided. By default, A-Frame provides us with a camera. By using the one we provided in `index.html`, we can explicitly control the perspective we have (as a user) in our scene. You will notice that the position of the starting position of the camera is 15 units in the third coordinate of the `position` attribute, aka the "z-axis". This allows us to back the perspective up so that we can see the entity we rendered at starting position "0 0 0" smack-dab in the middle of our scene!
 
-## A Simple Scene
+Go ahead and start your server if you haven't already and check out what we have rendering in the browser. If everything is in place, you will most likely see a black shape in the middle of your scene. If you are wondering why it doesn't have the color you provided it, this is because we have set the parent `a-scene` tag to have no lighting! Uncomment the `<a-entity>` line with the `light` attribute to ensure we have nice even illumination everywhere.
 
-In order to make use of the A-Frame library, we are going to be requiring it via a top level `<script>` tag in our HTML. Take a look at this projects `index.html` and familiarize yourself with the code and identify each of the bullets as a class:
-  - We require the script so that our application has access to the A-Frame library methods and HTML content
-  - Via HTML tags, we are defining several A-Frame **entities** to be rendered
-  - Via HTML **attributes**, we are defining A-Frame **components** (position, geometry, color)
-  - Via a wrapper `<a-scene>` tag, we are defining an A-Frame **system**
+Alright -- now that we have some basics squared away, let's incorporate JavaScript to see how we can automatically spawn several of these `<a-sphere>` entities. The next bit we will write in `index.js`.
 
-Go ahead and start up your local server and take a look at what renders in the browser. 
+## Incorporating JavaScript
 
-You should see an open 3D world and a visual representation of each a-tag within the scene. 
+You will see that we have provided several starter functions in `index.js` to get you on your way. Please implement the `createSpheres` function. It should, as long as we have more random values in our two arrays, create and add `<a-spheres>` to the scene using the `addEntityToScene` and the `createSphere` functions. If everything is working properly, yours should look something like the image below (colors/positions will be random of course!). You will see that we invoked `createSpheres()` directly in the Chrome console:
 
-**NOTE:** Take a moment to match up the HTML with the shapes displaying in the browser.
+![](./assets/example-1.png)
 
-This is pretty incredible! Without needing to write any JavaScript ourselves we are rendering 3D objects on the screen, and able to move around the scene using the arrow keys/WASD. We can also click + drag the mouse to look around!
+## Jazzing It Up
 
-## Using the Inspector
+##### Center Sphere
 
-A-Frame provides us with a powerful inspector that comes with the library (similar to Chrome Developer Tools). To open it, use the following command: `ctrl + alt(option) + i`. Everything we can do in the inspector can be done programmatically. Regardless, it is useful to explore the realtime effects of changing values that exist in our code through it.
+Let's add an [animation][animations-doc] to our spheres to make our scene really pop. For our center sphere, let's have it rotate around the y-axis. For our other spheres a slight bob, so that they move enough to make a relaxing floating sphere scene, should do the trick.
 
-Let's use the inspector now to 'demystify' the `a-sky` entity and see how it, like the other shapes you see in the scene, is just another entity:
-  - Change the color of the sky entity
-  - Shrink the sky (a radius of 10 should do it)
-  - Use the access movement arrows (shown as red/blue/yellow arrows) to move the sky so that it no longer surrounds the shapes in the middle of the scene
+Take a moment to peak at the [documentation][animations-doc]. You will see that, to provide an animation to an `<a-entity>`, we need to provide an `<a-animation>` within the entity's tags. Add a fixed rotation to our central `<a-sphere>` in `index.html`. (If you haven't already, make sure you give the `<a-sphere>` a texture instead of a color: `<a-sphere src="./assets/wall-texture.jpg"...>`. We used the following attributes to ensure a steady rotation around the y-axis:
 
-This is a straight forward example of an important point when programming visual experiences: we 'trick' the user into believing they are perceiving something specific with a clever trick. In this case, the sky can be visually interpreted as a boundless blue expanse. In (virtual) reality, it is a sphere with a solid interior color. If we wanted, we could wrap a 2D image of clouds around the inside of that sphere to further the illusion!
+```
+attribute="rotation"
+dur="10000"
+fill="none"
+from="0 0 0"
+to="0 360 0"
+easing="linear"
+repeat="indefinite"
+```
 
-In fact, let's do something along those lines now (but more fun). Try replacing the sky **entity**'s color **attribute** with an image of your choosing. Naturally, we opted to slap [Chrome-Boi][rejected-chrome-boi] into the sky by providing a `src` attribute to the HTML element: `<a-sky src="./assets/chrome-boi.png"></a-sky>`
+##### Randomly Generated Spheres
 
-## Moving Forward
+For our randomly generated spheres, we are going to have to add our animation entities in our JavaScript. Go ahead and create a new function named `addBobAnimationToElement`. This function should do the following:
+  - accepts, in first position, a DOM element (in our example, it would be an `<a-sphere>`)
+  - create an `<a-animation>` element that does the following:
+    - acts on the `position` attribute of its parent
+    - repeats indefinitely
+    - starts at -1 and ends at 1 on the y-axis **(relative to its already set position!)**
+    - uses an easing and direction option to provide a bob effect
+    - completes a full animation in 2 seconds or less
+  - using `appendChild`, it adds that new animation as a child element of the passed argument
+  - returns the originally passed DOM element with the animation added
 
-Going forward, we will take a deeper look into A-Frame and explore more interactive uses of the framework!
+Don't forget to update your `index.js` code so that the `<a-sphere>`s have their animation added before they are appended to the DOM!
 
-**NOTE:** Now is a good time to allow students to clone down the sample code repository and explore it themselves before moving forward.
+If possible, work in small groups or pairs! If you are having trouble, take a look at the `createSphere` function and the [documentation][animations-docs] for guidance. If you are stumped by implementing an animation that transforms the _relative_ position of the entity instead of the _absolute_ position, take a look at [this page][position-doc]. There are several ways you can implement this -- see what works for you!
 
-[rejected-chrome-boi]: "https://en.wikipedia.org/wiki/Draft:Chrome_Boi"
-[ecs]: "https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system"
-[a-frame-intro]: "https://aframe.io/docs/0.8.0/introduction/"
+**BONUS:** provide a random animation start delay (within reason) to ensure the animations are not all in sync. (Reference the docs!). Below is a GIF of the solution we came up with:
+
+![](./assets/completed-example.gif)
+
+In the next lab, we are going to explore "System" in the ECS paradigm and see how we can tie it all together into an interactive experience. We will use a lot of the same code from this repository.
+
+[animations-doc]: "https://github.com/aframevr/aframe/blob/master/docs/core/animations.md"
+[position-doc]: "https://github.com/aframevr/aframe/blob/master/docs/components/position.md"
 [example]: https://github.com/learn-co-curriculum/kwk-level-2-a-frame-lecture-code
