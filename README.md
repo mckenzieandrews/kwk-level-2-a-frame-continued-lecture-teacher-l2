@@ -78,4 +78,4 @@ In the next lab, we are going to explore "System" in the ECS paradigm and see ho
 
 [animations-doc]: "https://github.com/aframevr/aframe/blob/master/docs/core/animations.md"
 [position-doc]: "https://github.com/aframevr/aframe/blob/master/docs/components/position.md"
-[example]: https://github.com/learn-co-curriculum/kwk-level-2-a-frame-lecture-continued-code
+[example]: https://github.com/learn-co-curriculum/kwk-level-2-a-frame-continued-lecture-code
