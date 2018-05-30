@@ -17,7 +17,7 @@ const colors = [
   "pink"
 ]
 
-// removes and returns a random element from an array. modifies the array
+// removes and returns a random element from an array
 function sample(arr) {
   const randIdx = Math.floor(Math.random() * arr.length)
   const value = arr[randIdx]
@@ -32,34 +32,13 @@ function addEntityToScene(entity) {
 function createSphere() {
   const newSphere = document.createElement('a-sphere')
   const color = sample(colors)
-  const coords = sample(startPositions)
+  const coords = sample(startPositions).join(' ')
   newSphere.setAttribute("radius", Math.ceil(Math.random() * 3))
   newSphere.setAttribute("color", color)
   newSphere.setAttribute("position", coords)
-  return [newSphere, coords]
-}
-
-function addBobAnimationToElement(el, coord) {
-  const newAnim = document.createElement('a-animation')
-  newAnim.setAttribute("attribute", "position")
-  newAnim.setAttribute("repeat", "indefinite")
-  newAnim.setAttribute("from", [coord[0], coord[1] - 1, coord[2]].join(" ")) // start position of animation
-  newAnim.setAttribute("to", [coord[0], coord[1] + 1, coord[2]].join(" ")) // end position of animation
-  newAnim.setAttribute("easing", "ease")
-  newAnim.setAttribute("direction", "alternate")
-  newAnim.setAttribute("dur", "2000") // duration
-  el.appendChild(newAnim)
-  return el
+  return newSphere
 }
 
 function createSpheres() {
-  let x = 4
-  while (x > 0) {
-    setTimeout(() => {
-      let [el, coords] = createSphere()
-      el = addBobAnimationToElement(el, coords)
-      addEntityToScene(el)
-    }, Math.random() * 2500)
-    x--
-  }
+  // TODO: implement me!
 }
