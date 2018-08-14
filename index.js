@@ -60,6 +60,6 @@ function createSpheres() {
       el = addBobAnimationToElement(el, coords)
       addEntityToScene(el)
     }, Math.random() * 2500)
-    x++
+    x--
   }
 }
